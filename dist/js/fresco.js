@@ -1,6 +1,7 @@
 /**
+ * Forked and modified by Adam Grider from:
  * Fresco - A Beautiful Responsive Lightbox - v2.3.0
- * (c) 2012-2019 Nick Stakenburg
+ * (c) 2012-2020 Nick Stakenburg
  *
  * https://www.frescojs.com
  *
@@ -25,7 +26,7 @@
 var Fresco = {};
 
 $.extend(Fresco, {
-  version: "2.3.0"
+  version: "2.3.1"
 });
 
 Fresco.Skins = {
@@ -526,17 +527,17 @@ var Types = {
 
   vimeo: {
     detect: function(url) {
-      var res = /(vimeo\.com)\/([a-zA-Z0-9-_]+)(?:\S+)?$/i.exec(url);
-      if (res && res[2]) return res[2];
+      var res = /(vimeo\.com)\/([a-zA-Z0-9-_]+)(\/[a-zA-Z0-9-_]+)?(?:\S+)?$/i.exec(url);
+      if (res && res[2]) return res;
 
       return false;
     },
     data: function(url) {
-      var id = this.detect(url);
-      if (!id) return false;
-
+      var parsed = this.detect(url);
+      if (!parsed) return false;
       return {
-        id: id
+        id: parsed[2],
+        private: parsed[3]
       };
     }
   },
@@ -593,7 +594,9 @@ var VimeoThumbnail = (function() {
             ? "s"
             : "") +
           ":",
-        video_id = getURIData(this.url).id;
+          uriData = getURIData(this.url),
+          video_id = uriData.id,
+          video_private = uriData.private || '';
 
       this._xhr = $.getJSON(
         protocol +
@@ -601,6 +604,7 @@ var VimeoThumbnail = (function() {
           protocol +
           "//vimeo.com/" +
           video_id +
+          video_private +
           "&callback=?",
         $.proxy(function(_data) {
           if (_data && _data.thumbnail_url) {
@@ -680,7 +684,9 @@ var VimeoReady = (function() {
             ? "s"
             : "") +
           ":",
-        video_id = getURIData(this.url).id;
+        uriData = getURIData(this.url),
+        video_id = uriData.id,
+        video_private = uriData.private || '';
 
       // NOTE: We're using a maxwidth/maxheight hack because of a regression in the oEmbed API
       // see: https://vimeo.com/forums/api/topic:283559
@@ -690,6 +696,7 @@ var VimeoReady = (function() {
           protocol +
           "//vimeo.com/" +
           video_id +
+          video_private +
           "&maxwidth=9999999&maxheight=9999999&callback=?",
         $.proxy(function(_data) {
           var data = {

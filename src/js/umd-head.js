@@ -1,5 +1,6 @@
 /**
- * Fresco - A Beautiful Responsive Lightbox - v<%= pkg.version %>
+ * Forked and modified by Adam Grider from:
+ * Fresco - A Beautiful Responsive Lightbox - v2.3.0
  * (c) 2012-<%= grunt.template.today("yyyy") %> Nick Stakenburg
  *
  * https://www.frescojs.com

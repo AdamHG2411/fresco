@@ -24,7 +24,9 @@ var VimeoReady = (function() {
             ? "s"
             : "") +
           ":",
-        video_id = getURIData(this.url).id;
+        uriData = getURIData(this.url),
+        video_id = uriData.id,
+        video_private = uriData.private || '';
 
       // NOTE: We're using a maxwidth/maxheight hack because of a regression in the oEmbed API
       // see: https://vimeo.com/forums/api/topic:283559
@@ -34,6 +36,7 @@ var VimeoReady = (function() {
           protocol +
           "//vimeo.com/" +
           video_id +
+          video_private +
           "&maxwidth=9999999&maxheight=9999999&callback=?",
         $.proxy(function(_data) {
           var data = {

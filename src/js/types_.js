@@ -58,17 +58,18 @@ var Types = {
 
   vimeo: {
     detect: function(url) {
-      var res = /(vimeo\.com)\/([a-zA-Z0-9-_]+)(?:\S+)?$/i.exec(url);
-      if (res && res[2]) return res[2];
+      var res = /(vimeo\.com)\/([a-zA-Z0-9-_]+)(\/[a-zA-Z0-9-_]+)?(?:\S+)?$/i.exec(url);
+      if (res && res[2]) return res;
 
       return false;
     },
     data: function(url) {
-      var id = this.detect(url);
-      if (!id) return false;
+      var parsed = this.detect(url);
+      if (!parsed) return false;
 
       return {
-        id: id
+        id: parsed[2],
+        private: parsed[3]
       };
     }
   }

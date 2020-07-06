@@ -25,7 +25,9 @@ var VimeoThumbnail = (function() {
             ? "s"
             : "") +
           ":",
-        video_id = getURIData(this.url).id;
+          uriData = getURIData(this.url),
+          video_id = uriData.id,
+          video_private = uriData.private || '';
 
       this._xhr = $.getJSON(
         protocol +
@@ -33,6 +35,7 @@ var VimeoThumbnail = (function() {
           protocol +
           "//vimeo.com/" +
           video_id +
+          video_private +
           "&callback=?",
         $.proxy(function(_data) {
           if (_data && _data.thumbnail_url) {
